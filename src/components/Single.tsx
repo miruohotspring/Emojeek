@@ -1,3 +1,4 @@
+import { Navigator } from './Navigator';
 import { RouteComponentProps } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -17,6 +18,7 @@ export function Single(props: RouteComponentProps<SingleProps>): JSX.Element {
     
     return (
         <>
+            <Navigator />
             <h1>{ data ? data.title : "loading"  }</h1>
             <div>created by {data ? data.username : "loading" }</div>
             <div>Article ID: {data ? data.article_id: "loading" }</div>

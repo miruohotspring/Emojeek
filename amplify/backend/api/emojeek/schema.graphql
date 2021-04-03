@@ -1,0 +1,22 @@
+type Post 
+    @model
+    @key (
+        name: "by_user", fields: ["author_id"]
+    )
+    @auth (rules: [
+        {allow: owner, provider: userPools, operations:[read, create, delete, update]}
+        {allow: public, operations:[read]}
+    ])
+{
+    id: ID!
+    author_id: ID!
+    author: User @connection(fields: ["author_id"])
+    title: String!
+    content: String!
+}
+
+type User @model {
+    id: ID!
+    name: String!
+    posts: [Post] @connection(keyName: "by_user", fields: ["id"])
+}
