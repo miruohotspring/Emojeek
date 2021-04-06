@@ -1,7 +1,4 @@
 import { Link } from 'react-router-dom'
-import { Main } from './Main'
-import { UserProfile } from './UserProfile'
-import { Single } from './Single'
 
 export function Navigator(): JSX.Element {
     return (

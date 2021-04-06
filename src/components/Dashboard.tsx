@@ -1,33 +1,20 @@
-import { AmplifyAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
-import { useState, useEffect } from 'react';
-import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
-import Amplify, { Auth } from 'aws-amplify';
-import { Navigator } from './Navigator';
+import { AmplifyAuthenticator } from '@aws-amplify/ui-react'
+import { AuthState } from '@aws-amplify/ui-components';
+import { Navigator } from './index';
+import { MyUser } from '../Interface';
 
-export function Dashboard() : JSX.Element {
-    const [user, setUser] = useState<any>();
-    const [authState, setAuthState] = useState<AuthState>();
-    
-    useEffect(() => {
-        onAuthUIStateChange((nextAuthState, authData) => {
-            setAuthState(nextAuthState);
-            setUser(authData);
-        });
-        async function init() {
-            const currentUser = await Auth.currentAuthenticatedUser();
-            setUser( {username: currentUser.username} );
-        }
-        init();
-    }, []);
-    
-    return user ? (
+export function Dashboard(props: DashboardProps) : JSX.Element {
+    return props.user && props.authState === AuthState.SignedIn ? (
         <>
             <Navigator />
-            <h1>Hello, {user.username}</h1>
+            <h1>Hello, {props.user.username}</h1>
         </>
     ) : (
-        <AmplifyAuthenticator>
-        </AmplifyAuthenticator>
+        <AmplifyAuthenticator />
     );
 }
 
+interface DashboardProps {
+    authState: AuthState | undefined;
+    user: MyUser | undefined;
+}

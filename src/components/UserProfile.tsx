@@ -1,4 +1,5 @@
-import { Navigator } from './Navigator';
+import { Navigator } from './index';
+
 export function UserProfile(): JSX.Element {
     return (
         <>
