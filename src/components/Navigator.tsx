@@ -1,12 +1,12 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { Button } from '@material-ui/core';
 
 export function Navigator(): JSX.Element {
     return (
         <>
-            <div><Link to = "/">Top Page</Link></div>
-            <div><Link to = "/user">User</Link></div>
-            <div><Link to = "/miruo/12345">Single</Link></div>
-            <div><Link to = "/dashboard">MyPage</Link></div>
+            <Button variant='outlined' color="primary" href="/">トップページ</Button>
+            <Button variant='outlined' color="primary" href="/post">投稿</Button>
+            <Button variant='outlined' color="primary" href="/dashboard">マイページ</Button>
         </>
     )
 }
