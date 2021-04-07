@@ -2,134 +2,112 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser {
-    onCreateUser {
-      id
-      name
-      createdAt
-      updatedAt
-      posts {
-        items {
-          id
-          author_id
-          title
-          content
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-    }
-  }
-`;
-export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser {
-    onUpdateUser {
-      id
-      name
-      createdAt
-      updatedAt
-      posts {
-        items {
-          id
-          author_id
-          title
-          content
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-    }
-  }
-`;
-export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser {
-    onDeleteUser {
-      id
-      name
-      createdAt
-      updatedAt
-      posts {
-        items {
-          id
-          author_id
-          title
-          content
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-    }
-  }
-`;
 export const onCreatePost = /* GraphQL */ `
-  subscription OnCreatePost($owner: String) {
-    onCreatePost(owner: $owner) {
+  subscription OnCreatePost {
+    onCreatePost {
+      type
       id
-      author_id
-      author {
-        id
-        name
-        createdAt
-        updatedAt
-        posts {
-          nextToken
-        }
-      }
       title
       content
+      owner
       createdAt
       updatedAt
-      owner
+      reactions {
+        items {
+          id
+          postId
+          emoji
+          owner
+        }
+        nextToken
+      }
     }
   }
 `;
 export const onUpdatePost = /* GraphQL */ `
-  subscription OnUpdatePost($owner: String) {
-    onUpdatePost(owner: $owner) {
+  subscription OnUpdatePost {
+    onUpdatePost {
+      type
       id
-      author_id
-      author {
-        id
-        name
-        createdAt
-        updatedAt
-        posts {
-          nextToken
-        }
-      }
       title
       content
+      owner
       createdAt
       updatedAt
-      owner
+      reactions {
+        items {
+          id
+          postId
+          emoji
+          owner
+        }
+        nextToken
+      }
     }
   }
 `;
 export const onDeletePost = /* GraphQL */ `
-  subscription OnDeletePost($owner: String) {
-    onDeletePost(owner: $owner) {
+  subscription OnDeletePost {
+    onDeletePost {
+      type
       id
-      author_id
-      author {
+      title
+      content
+      owner
+      createdAt
+      updatedAt
+      reactions {
+        items {
+          id
+          postId
+          emoji
+          owner
+        }
+        nextToken
+      }
+    }
+  }
+`;
+export const onCreateReaction = /* GraphQL */ `
+  subscription OnCreateReaction {
+    onCreateReaction {
+      id
+      postId
+      emoji
+      post {
+        type
         id
-        name
+        title
+        content
+        owner
         createdAt
         updatedAt
-        posts {
+        reactions {
           nextToken
         }
       }
-      title
-      content
-      createdAt
-      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteReaction = /* GraphQL */ `
+  subscription OnDeleteReaction {
+    onDeleteReaction {
+      id
+      postId
+      emoji
+      post {
+        type
+        id
+        title
+        content
+        owner
+        createdAt
+        updatedAt
+        reactions {
+          nextToken
+        }
+      }
       owner
     }
   }

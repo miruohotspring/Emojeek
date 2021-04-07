@@ -2,41 +2,22 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getUser = /* GraphQL */ `
-  query GetUser($id: ID!) {
-    getUser(id: $id) {
-      id
-      name
-      createdAt
-      updatedAt
-      posts {
-        items {
-          id
-          author_id
-          title
-          content
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-    }
-  }
-`;
-export const listUsers = /* GraphQL */ `
-  query ListUsers(
-    $filter: ModelUserFilterInput
+export const listPosts = /* GraphQL */ `
+  query ListPosts(
+    $filter: ModelPostFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
+        type
         id
-        name
+        title
+        content
+        owner
         createdAt
         updatedAt
-        posts {
+        reactions {
           nextToken
         }
       }
@@ -47,45 +28,169 @@ export const listUsers = /* GraphQL */ `
 export const getPost = /* GraphQL */ `
   query GetPost($id: ID!) {
     getPost(id: $id) {
+      type
       id
-      author_id
-      author {
-        id
-        name
-        createdAt
-        updatedAt
-        posts {
-          nextToken
-        }
-      }
       title
       content
+      owner
       createdAt
       updatedAt
-      owner
+      reactions {
+        items {
+          id
+          postId
+          emoji
+          owner
+        }
+        nextToken
+      }
     }
   }
 `;
-export const listPosts = /* GraphQL */ `
-  query ListPosts(
+export const listPostsSortedByCreatedAt = /* GraphQL */ `
+  query ListPostsSortedByCreatedAt(
+    $type: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
     $filter: ModelPostFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listPostsSortedByCreatedAt(
+      type: $type
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        type
+        id
+        title
+        content
+        owner
+        createdAt
+        updatedAt
+        reactions {
+          nextToken
+        }
+      }
+      nextToken
+    }
+  }
+`;
+export const listPostsBySpecificOwner = /* GraphQL */ `
+  query ListPostsBySpecificOwner(
+    $owner: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPostFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPostsBySpecificOwner(
+      owner: $owner
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        type
+        id
+        title
+        content
+        owner
+        createdAt
+        updatedAt
+        reactions {
+          nextToken
+        }
+      }
+      nextToken
+    }
+  }
+`;
+export const getReaction = /* GraphQL */ `
+  query GetReaction($id: ID!) {
+    getReaction(id: $id) {
+      id
+      postId
+      emoji
+      post {
+        type
+        id
+        title
+        content
+        owner
+        createdAt
+        updatedAt
+        reactions {
+          nextToken
+        }
+      }
+      owner
+    }
+  }
+`;
+export const listReactions = /* GraphQL */ `
+  query ListReactions(
+    $filter: ModelReactionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReactions(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        author_id
-        author {
+        postId
+        emoji
+        post {
+          type
           id
-          name
+          title
+          content
+          owner
           createdAt
           updatedAt
         }
-        title
-        content
-        createdAt
-        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const listReactionOnSpecificPost = /* GraphQL */ `
+  query ListReactionOnSpecificPost(
+    $postId: ID
+    $emoji: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelReactionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReactionOnSpecificPost(
+      postId: $postId
+      emoji: $emoji
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        postId
+        emoji
+        post {
+          type
+          id
+          title
+          content
+          owner
+          createdAt
+          updatedAt
+        }
         owner
       }
       nextToken

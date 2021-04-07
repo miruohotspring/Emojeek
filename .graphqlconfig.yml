@@ -1,6 +1,6 @@
 projects:
   emojeek:
-    schemaPath: src/graphql/schema.json
+    schemaPath: amplify/backend/api/emojeek/build/schema.graphql
     includes:
       - src/graphql/**/*.ts
     excludes:

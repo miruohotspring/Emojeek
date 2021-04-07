@@ -1,0 +1,36 @@
+type Post 
+    @model
+    @auth (rules: [
+        {allow: owner, provider: userPools, operations:[read, create, delete, update]}
+        {allow: private, provider: userPools, operations:[read]}
+        {allow: public, operations:[read]}
+    ])
+    @key(name: "SortByCreatedAt", fields:["type", "createdAt"], queryField: "listPostsSortedByCreatedAt")
+    @key(name: "BySpecificOwner", fields:["owner", "createdAt"], queryField: "listPostsBySpecificOwner")
+{
+    type: String!
+    id: ID
+    title: String!
+    content: String!
+    owner: String
+    createdAt: AWSDateTime
+    reactions: [Reaction] @connection(keyName: "OnSpecificPost", fields: ["id"])
+}
+
+type Reaction
+    @model (
+        mutations: {create: "createReaction", delete: "deleteReaction", update: null }
+        timestamps: null
+    )
+    @auth (rules: [
+        {allow: owner, provider: userPools, operations:[read, create, delete]},
+        {allow: private, provider: userPools, operations:[read]},
+        {allow: public, operations:[read]}
+    ])
+    @key (name: "OnSpecificPost", fields:["postId", "emoji"], queryField: "listReactionOnSpecificPost")
+{
+    id: ID
+    postId: ID!
+    post: Post @connection(name: "PostReactions", fields: ["postId"])
+    emoji: String!
+}

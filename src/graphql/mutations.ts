@@ -8,22 +8,22 @@ export const createPost = /* GraphQL */ `
     $condition: ModelPostConditionInput
   ) {
     createPost(input: $input, condition: $condition) {
+      type
       id
-      author_id
-      author {
-        id
-        name
-        createdAt
-        updatedAt
-        posts {
-          nextToken
-        }
-      }
       title
       content
+      owner
       createdAt
       updatedAt
-      owner
+      reactions {
+        items {
+          id
+          postId
+          emoji
+          owner
+        }
+        nextToken
+      }
     }
   }
 `;
@@ -33,22 +33,22 @@ export const updatePost = /* GraphQL */ `
     $condition: ModelPostConditionInput
   ) {
     updatePost(input: $input, condition: $condition) {
+      type
       id
-      author_id
-      author {
-        id
-        name
-        createdAt
-        updatedAt
-        posts {
-          nextToken
-        }
-      }
       title
       content
+      owner
       createdAt
       updatedAt
-      owner
+      reactions {
+        items {
+          id
+          postId
+          emoji
+          owner
+        }
+        nextToken
+      }
     }
   }
 `;
@@ -58,97 +58,72 @@ export const deletePost = /* GraphQL */ `
     $condition: ModelPostConditionInput
   ) {
     deletePost(input: $input, condition: $condition) {
+      type
       id
-      author_id
-      author {
+      title
+      content
+      owner
+      createdAt
+      updatedAt
+      reactions {
+        items {
+          id
+          postId
+          emoji
+          owner
+        }
+        nextToken
+      }
+    }
+  }
+`;
+export const createReaction = /* GraphQL */ `
+  mutation CreateReaction(
+    $input: CreateReactionInput!
+    $condition: ModelReactionConditionInput
+  ) {
+    createReaction(input: $input, condition: $condition) {
+      id
+      postId
+      emoji
+      post {
+        type
         id
-        name
+        title
+        content
+        owner
         createdAt
         updatedAt
-        posts {
+        reactions {
           nextToken
         }
       }
-      title
-      content
-      createdAt
-      updatedAt
       owner
     }
   }
 `;
-export const createUser = /* GraphQL */ `
-  mutation CreateUser(
-    $input: CreateUserInput!
-    $condition: ModelUserConditionInput
+export const deleteReaction = /* GraphQL */ `
+  mutation DeleteReaction(
+    $input: DeleteReactionInput!
+    $condition: ModelReactionConditionInput
   ) {
-    createUser(input: $input, condition: $condition) {
+    deleteReaction(input: $input, condition: $condition) {
       id
-      name
-      createdAt
-      updatedAt
-      posts {
-        items {
-          id
-          author_id
-          title
-          content
-          createdAt
-          updatedAt
-          owner
+      postId
+      emoji
+      post {
+        type
+        id
+        title
+        content
+        owner
+        createdAt
+        updatedAt
+        reactions {
+          nextToken
         }
-        nextToken
       }
-    }
-  }
-`;
-export const updateUser = /* GraphQL */ `
-  mutation UpdateUser(
-    $input: UpdateUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    updateUser(input: $input, condition: $condition) {
-      id
-      name
-      createdAt
-      updatedAt
-      posts {
-        items {
-          id
-          author_id
-          title
-          content
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-    }
-  }
-`;
-export const deleteUser = /* GraphQL */ `
-  mutation DeleteUser(
-    $input: DeleteUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    deleteUser(input: $input, condition: $condition) {
-      id
-      name
-      createdAt
-      updatedAt
-      posts {
-        items {
-          id
-          author_id
-          title
-          content
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
+      owner
     }
   }
 `;
