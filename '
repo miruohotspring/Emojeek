@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { MyUser } from '../Interface';
 import { API, graphqlOperation } from 'aws-amplify'; 
 import { listReactionOnSpecificPost, listPostsSortedByCreatedAt } from '../graphql/queries';
@@ -7,7 +7,6 @@ import { Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
 
 import {
-  Box,
   Button,
   List,
   ListItem,
@@ -30,14 +29,12 @@ export function Main(props: MainProps): JSX.Element {
     useEffect(() => {
         // 記事の取得
         getPosts();
-    }, []);
-    
-    useEffect(() => {
         // 各記事のリアクションの取得
         posts.posts.forEach((element: any) => {
             getReaction(element.id);
         });
-    }, [posts]);
+        console.log(reactions);
+    }, []);
     
     // 記事の取得．取得した記事をposts stateにセットする．
     async function getPosts() {
@@ -56,7 +53,7 @@ export function Main(props: MainProps): JSX.Element {
         }));
         
         // 各リアクションについて，既に存在していればインクリメント，そうでなければ1をセット
-        const tmp: Reaction = {};
+        var tmp: Reaction = {};
         res.data.listReactionOnSpecificPost.items.forEach((reaction: any) => {
             if (reaction.emoji in tmp) {
                 tmp[reaction.emoji] = tmp[reaction.emoji] + 1;
@@ -64,7 +61,9 @@ export function Main(props: MainProps): JSX.Element {
                 tmp[reaction.emoji] = 1;
             }
         });
-        setReactions((state) => ({...state, [postId]: tmp}));
+        const newPostReactions = {...reactions, postId: tmp};
+        setReactions(newPostReactions);
+        
     }
     
     async function onPick(emoji: any) {
@@ -74,16 +73,12 @@ export function Main(props: MainProps): JSX.Element {
         }}));
     }
     
-    
     function showPost(post: any): JSX.Element {
         function onReaction (event: any) {
             setPickerState({ show: !pickerState.show, postId: post.id, x: event.clientX, y: event.clientY });
         }
-        
         return (
             <>
-            <Box>
-            <Button variant="outlined" fullWidth>
             <ListItem>
                 <List>
                 <ListItem>
@@ -103,20 +98,7 @@ export function Main(props: MainProps): JSX.Element {
                 </ListItem>
                 </List>
             </ListItem>
-            </Button>
-            </Box>
-            
-            <Box>
-            {reactions[post.id] && Object.keys(reactions[post.id]).map((e: any) => 
-                <Button variant="outlined">{e}{reactions[post.id][e]}</Button>
-            )}
             <Button onClick={onReaction}>+</Button>
-            { pickerState.show && pickerState.postId === post.id &&
-                <div id="overlay" style={{top: pickerState.y, left: pickerState.x}}>
-                <Picker onSelect={(emoji: any) => {onPick(emoji)}} /> 
-                </div>
-            }
-            </Box>
             </>
         );
     }
@@ -124,6 +106,11 @@ export function Main(props: MainProps): JSX.Element {
     return (
         <>
             <Typography variant='h3'>Emojeek</Typography>
+            { pickerState.show && 
+                <div id="overlay" style={{top: pickerState.y, left: pickerState.x}}>
+                <Picker onSelect={(emoji: any) => {onPick(emoji)}} /> 
+                </div>
+            }
             <List>
             {posts.posts.map(post => (
                 showPost(post)
