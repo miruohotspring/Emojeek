@@ -3,17 +3,15 @@ import { useState } from 'react';
 import { AmplifyAuthenticator } from '@aws-amplify/ui-react';
 import { AuthState } from '@aws-amplify/ui-components';
 import { MyUser } from '../Interface';
-import { Auth, API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 
 import { Typography } from '@material-ui/core';
 import {
   Button,
-  Drawer,
   List,
   ListItem,
   ListItemText,
   TextField,
-  ListItemIcon,
 } from '@material-ui/core';
 
 import { createPost } from '../graphql/mutations';

@@ -1,25 +1,33 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { MyUser } from '../Interface';
 import { API, graphqlOperation } from 'aws-amplify'; 
 import { listReactionOnSpecificPost, listPostsSortedByCreatedAt } from '../graphql/queries';
-import GraphQLResult from 'aws-amplify';
 import { Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
+import awsmobile from '../aws-exports';
+import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
+import gql from 'graphql-tag';
 
 import {
   Box,
   Button,
   List,
   ListItem,
-  Divider,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
   Typography,
-  CircularProgress,
 } from '@material-ui/core';
 
 import { createReaction } from '../graphql/mutations';
+import { myquery, myquery2 } from '../graphql/queries';
+
+const client = new AWSAppSyncClient({
+    url: awsmobile.aws_appsync_graphqlEndpoint,
+    region: awsmobile.aws_appsync_region,
+    auth: {
+        type: AUTH_TYPE.API_KEY,
+        apiKey: awsmobile.aws_appsync_apiKey,
+    }
+});
+
 
 export function Main(props: MainProps): JSX.Element {
     const [posts, setPosts] = useState({posts: []});
@@ -41,19 +49,18 @@ export function Main(props: MainProps): JSX.Element {
     
     // 記事の取得．取得した記事をposts stateにセットする．
     async function getPosts() {
-        const res: any = await API.graphql(graphqlOperation(listPostsSortedByCreatedAt, {
-            type: "post",
-            sortDirection: 'DESC',
-            limit: 20,
-        }));
-        setPosts({ posts: res.data.listPostsSortedByCreatedAt.items });
+        const result: any = await client.query({
+            query: gql(myquery)
+        });
+        setPosts({ posts: result.data.listPostsSortedByCreatedAt.items });
     }
     
     // 記事IDからリアクションを取得．reactions stateにセットする．
     async function getReaction(postId: string) {
-        const res: any = await API.graphql(graphqlOperation(listReactionOnSpecificPost, {
-            postId: postId
-        }));
+        var q = myquery2.replace('$postId', postId);
+        const res: any = await client.query({
+            query: gql(q)
+        });
         
         // 各リアクションについて，既に存在していればインクリメント，そうでなければ1をセット
         const tmp: Reaction = {};

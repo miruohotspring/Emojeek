@@ -1,6 +1,5 @@
 import { useState, useEffect} from 'react';
-import { Redirect, BrowserRouter, Route } from 'react-router-dom';
-import { AmplifySignOut } from '@aws-amplify/ui-react'
+import { BrowserRouter, Route } from 'react-router-dom';
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import { Auth } from 'aws-amplify';
 
