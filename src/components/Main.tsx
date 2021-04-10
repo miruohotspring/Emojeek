@@ -8,6 +8,7 @@ import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 import gql from 'graphql-tag';
 
 import {
+  Link,
   Box,
   Button,
   List,
@@ -32,7 +33,7 @@ const client = new AWSAppSyncClient({
 export function Main(props: MainProps): JSX.Element {
     const [posts, setPosts] = useState({posts: []});
     const [reactions, setReactions] = useState<PostReaction>({});
-    const [pickerState, setPickerState] = useState<PickerState>({ show: false, postId: "", x: 0, y: 0 });
+    const [pickerState, setPickerState] = useState<PickerState>({ show: false, postId: "" });
     
     /* 記事そのものとリアクションは別のテーブルに保持しているため，別々に取得する必要がある．*/
     // 記事の取得
@@ -86,13 +87,13 @@ export function Main(props: MainProps): JSX.Element {
     
     function showPost(post: any): JSX.Element {
         function onReaction (event: any) {
-            setPickerState({ show: !pickerState.show, postId: post.id, x: event.clientX, y: event.clientY });
+            setPickerState({ show: !pickerState.show, postId: post.id });
         }
         
         return (
             <>
-            <Box>
-            <Button variant="outlined" fullWidth>
+            <Box marginBottom="50px">
+            <Box width="100%">
             <ListItem>
                 <List>
                 <ListItem>
@@ -102,7 +103,7 @@ export function Main(props: MainProps): JSX.Element {
                 </ListItem>
                 <ListItem>
                 <Typography>
-                    {post.owner}
+                    by: <Button href={"/user/" + post.owner}>{post.owner}</Button>
                 </Typography>
                 </ListItem>
                 <ListItem>
@@ -112,21 +113,19 @@ export function Main(props: MainProps): JSX.Element {
                 </ListItem>
                 </List>
             </ListItem>
-            </Button>
             </Box>
             
-            <Box>
+            <Box> 
             {reactions[post.id] && Object.keys(reactions[post.id]).map((e: any) => 
                 <Button variant="outlined">{e}{reactions[post.id][e]}</Button>
             )}
-            <Button onClick={onReaction}>
+            <Button variant="outlined" onClick={onReaction}>
                 {pickerState.show && pickerState.postId === post.id && <>-</> || <>+</>}
             </Button>
             { pickerState.show && pickerState.postId === post.id &&
-                <div id="overlay" style={{top: pickerState.y, left: pickerState.x}}>
-                <Picker onSelect={(emoji: any) => {onPick(emoji)}} /> 
-                </div>
+                <Box><Picker onSelect={(emoji: any) => {onPick(emoji)}} /></Box>
             }
+            </Box>
             </Box>
             </>
         );
@@ -157,8 +156,6 @@ interface PostReaction {
 interface PickerState {
     show: boolean;
     postId: string;
-    x: number;
-    y: number;
 }
 
 interface MainProps {

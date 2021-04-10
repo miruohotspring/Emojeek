@@ -10,7 +10,7 @@ import { theme } from './Design';
 import './App.css';
 
 // components and interfaces
-import { Main, Post, UserProfile, Single, Dashboard } from './components';
+import { Main, Post, UserProfile, Dashboard } from './components';
 import { MyUser } from './Interface';
 
 async function signOut() {
@@ -52,7 +52,7 @@ function App(): JSX.Element {
             <BrowserRouter>
                 <Route exact path = "/" render={() => <Main user={user}/>} />
                 <Route exact path = "/user" component = { UserProfile } />
-                <Route exact path = "/:username/:article_id" component = { Single } />
+                <Route exact path = "/user/:username" component = { UserProfile } />
                 <Route exact path = "/dashboard" render={() => <Dashboard authState={authState} user={user}/>} />
                 <Route exact path = "/post" render={() => <Post authState={authState} user={user}/>} />
             </BrowserRouter>
