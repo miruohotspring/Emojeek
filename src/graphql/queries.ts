@@ -48,24 +48,6 @@ export const getPost = /* GraphQL */ `
   }
 `;
 
-export const myquery = `
-    query MyQuery {
-    listPostsSortedByCreatedAt(type: "post", limit: 20, sortDirection: DESC) {
-      items {
-        type
-        id
-        title
-        content
-        owner
-        createdAt
-        updatedAt
-        reactions {
-          nextToken
-        }
-      }
-    }
-    }
-`;
 
 export const listPostsSortedByCreatedAt = /* GraphQL */ `
   query ListPostsSortedByCreatedAt(
@@ -216,6 +198,25 @@ export const listReactionOnSpecificPost = /* GraphQL */ `
       nextToken
     }
   }
+`;
+
+export const myquery = `
+    query MyQuery {
+    listPostsSortedByCreatedAt(type: "post", limit: 20, sortDirection: DESC) {
+      items {
+        type
+        id
+        title
+        content
+        owner
+        createdAt
+        updatedAt
+        reactions {
+          nextToken
+        }
+      }
+    }
+    }
 `;
 
 export const myquery2 = `

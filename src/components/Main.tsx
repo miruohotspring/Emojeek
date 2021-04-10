@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { MyUser } from '../Interface';
 import { API, graphqlOperation } from 'aws-amplify'; 
-import { listReactionOnSpecificPost, listPostsSortedByCreatedAt } from '../graphql/queries';
 import { Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
 import awsmobile from '../aws-exports';
@@ -19,29 +18,30 @@ import {
 import { createReaction } from '../graphql/mutations';
 import { myquery, myquery2 } from '../graphql/queries';
 
+// API_KEYを使ったqueryの送信に使う
 const client = new AWSAppSyncClient({
     url: awsmobile.aws_appsync_graphqlEndpoint,
     region: awsmobile.aws_appsync_region,
     auth: {
         type: AUTH_TYPE.API_KEY,
         apiKey: awsmobile.aws_appsync_apiKey,
-    }
+    },
+    disableOffline: true
 });
-
 
 export function Main(props: MainProps): JSX.Element {
     const [posts, setPosts] = useState({posts: []});
     const [reactions, setReactions] = useState<PostReaction>({});
     const [pickerState, setPickerState] = useState<PickerState>({ show: false, postId: "", x: 0, y: 0 });
     
-    // 記事そのものとリアクションは別のテーブルに保持しているため，別々に取得する必要がある．
+    /* 記事そのものとリアクションは別のテーブルに保持しているため，別々に取得する必要がある．*/
+    // 記事の取得
     useEffect(() => {
-        // 記事の取得
         getPosts();
     }, []);
     
+    // 各記事のリアクションの取得
     useEffect(() => {
-        // 各記事のリアクションの取得
         posts.posts.forEach((element: any) => {
             getReaction(element.id);
         });
@@ -61,6 +61,8 @@ export function Main(props: MainProps): JSX.Element {
         const res: any = await client.query({
             query: gql(q)
         });
+        console.log(q);
+        console.log(res);
         
         // 各リアクションについて，既に存在していればインクリメント，そうでなければ1をセット
         const tmp: Reaction = {};
@@ -117,7 +119,9 @@ export function Main(props: MainProps): JSX.Element {
             {reactions[post.id] && Object.keys(reactions[post.id]).map((e: any) => 
                 <Button variant="outlined">{e}{reactions[post.id][e]}</Button>
             )}
-            <Button onClick={onReaction}>+</Button>
+            <Button onClick={onReaction}>
+                {pickerState.show && pickerState.postId === post.id && <>-</> || <>+</>}
+            </Button>
             { pickerState.show && pickerState.postId === post.id &&
                 <div id="overlay" style={{top: pickerState.y, left: pickerState.x}}>
                 <Picker onSelect={(emoji: any) => {onPick(emoji)}} /> 
