@@ -1,8 +1,8 @@
 import { RouteComponentProps } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-export function UserProfile(props: RouteComponentProps<SingleProps>): JSX.Element {
-    const [data, setData] = useState<SingleProps>({username: props.match.params.username});
+export function UserProfile(props: RouteComponentProps<UserProps>): JSX.Element {
+    const [data, setData] = useState<UserProps>({username: props.match.params.username});
     
     // on load
     useEffect(() => {
@@ -22,7 +22,7 @@ export function UserProfile(props: RouteComponentProps<SingleProps>): JSX.Elemen
     );
 }
 
-export interface SingleProps  {
+export interface UserProps  {
     username: string;
 }
 

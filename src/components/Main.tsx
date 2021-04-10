@@ -34,6 +34,7 @@ export function Main(props: MainProps): JSX.Element {
     const [posts, setPosts] = useState({posts: []});
     const [reactions, setReactions] = useState<PostReaction>({});
     const [pickerState, setPickerState] = useState<PickerState>({ show: false, postId: "" });
+    const [currentUserReaction, setUserReaction] = useState<UserPostReaction>({});
     
     /* 記事そのものとリアクションは別のテーブルに保持しているため，別々に取得する必要がある．*/
     // 記事の取得
@@ -59,11 +60,12 @@ export function Main(props: MainProps): JSX.Element {
     // 記事IDからリアクションを取得．reactions stateにセットする．
     async function getReaction(postId: string) {
         var q = myquery2.replace('$postId', postId);
+        var newUserReactions: UserPostReaction = currentUserReaction;
+        newUserReactions[postId] = [];
+        
         const res: any = await client.query({
             query: gql(q)
         });
-        console.log(q);
-        console.log(res);
         
         // 各リアクションについて，既に存在していればインクリメント，そうでなければ1をセット
         const tmp: Reaction = {};
@@ -73,21 +75,48 @@ export function Main(props: MainProps): JSX.Element {
             } else {
                 tmp[reaction.emoji] = 1;
             }
+            
+            // ユーザーがログインしていれば，ユーザーが既に押している絵文字を記録
+            if (props.user && props.user.username === reaction.owner && !newUserReactions[postId].includes(reaction.emoji)) {
+                newUserReactions[postId].push(reaction.emoji);
+            }
         });
+        setUserReaction(newUserReactions);
         setReactions((state) => ({...state, [postId]: tmp}));
     }
     
-    async function onPick(emoji: any) {
-        const res = await API.graphql(graphqlOperation(createReaction, { input: {
-            postId: pickerState.postId,
-            emoji: emoji.native,
-        }}));
-    }
     
     
     function showPost(post: any): JSX.Element {
+        // 絵文字パレットを表示
         function onReaction (event: any) {
             setPickerState({ show: !pickerState.show, postId: post.id });
+        }
+        
+        // 絵文字を押した時の処理(mutationの送信)
+        async function onPick(emoji: any) {
+            const res = await API.graphql(graphqlOperation(createReaction, { input: {
+                postId: pickerState.postId,
+                emoji: emoji.native,
+            }}));
+            incrementCount(emoji.native);
+        }
+        
+        // 絵文字を押したときに記事のリアクション数とユーザーのリアクションを更新
+        function incrementCount(e: string) {
+            var newPostReactions: PostReaction = {...reactions};
+            var newUserReactions: UserPostReaction = {...currentUserReaction};
+            
+            if (!newPostReactions[post.id][e]) {
+                newPostReactions[post.id][e] = 1;
+            } else {
+                newPostReactions[post.id][e] = newPostReactions[post.id][e] + 1;
+            }
+            newUserReactions[post.id].push(e);
+            
+            // state更新
+            setReactions(newPostReactions);
+            setUserReaction(newUserReactions);
         }
         
         return (
@@ -115,9 +144,22 @@ export function Main(props: MainProps): JSX.Element {
             </ListItem>
             </Box>
             
-            <Box> 
-            {reactions[post.id] && Object.keys(reactions[post.id]).map((e: any) => 
-                <Button variant="outlined">{e}{reactions[post.id][e]}</Button>
+            <Box paddingX="32px"> 
+            {reactions[post.id] && Object.keys(reactions[post.id]).map((e: any) => {
+                if (currentUserReaction[post.id].includes(e)) {
+                    return( 
+                        <Button onClick={() => incrementCount(e)} color="primary" variant="outlined">
+                        {e}{reactions[post.id][e]}
+                        </Button>
+                    );
+                } else {
+                    return( 
+                        <Button variant="outlined">
+                        {e}{reactions[post.id][e]}
+                        </Button>
+                    );
+                }
+            }
             )}
             <Button variant="outlined" onClick={onReaction}>
                 {pickerState.show && pickerState.postId === post.id && <>-</> || <>+</>}
@@ -153,11 +195,18 @@ interface PostReaction {
     [postId: string]: Reaction;
 }
 
+// 絵文字pickerを表示するためのstate
 interface PickerState {
     show: boolean;
     postId: string;
 }
 
+// これ要る???
 interface MainProps {
     user: MyUser | undefined;
+}
+
+// ユーザーがどの記事にどの絵文字をつけているかを保持
+interface UserPostReaction {
+    [postId: string]: string[];
 }
