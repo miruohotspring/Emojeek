@@ -1,14 +1,10 @@
 import { useEffect, useState } from 'react';
 import { MyUser } from '../Interface';
-import { API, graphqlOperation } from 'aws-amplify'; 
 import { Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
-import awsmobile from '../aws-exports';
-import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
-import gql from 'graphql-tag';
+import { RouteComponentProps } from 'react-router-dom';
 
 import {
-  Link,
   Box,
   Button,
   List,
@@ -16,35 +12,36 @@ import {
   Typography,
 } from '@material-ui/core';
 
+// graphqlの諸々
+import { API, graphqlOperation } from 'aws-amplify'; 
 import { createReaction } from '../graphql/mutations';
-import { myquery, myquery2 } from '../graphql/queries';
-
-// API_KEYを使ったqueryの送信に使う
-const client = new AWSAppSyncClient({
-    url: awsmobile.aws_appsync_graphqlEndpoint,
-    region: awsmobile.aws_appsync_region,
-    auth: {
-        type: AUTH_TYPE.API_KEY,
-        apiKey: awsmobile.aws_appsync_apiKey,
-    },
-    disableOffline: true
-});
+import { listReactionOnSpecificOwner, listPostsBySpecificOwner, listPostsSortedByCreatedAt, listReactionOnSpecificPost } from '../queries';
+import { client } from '../client';
+import gql from 'graphql-tag';
 
 export function Main(props: MainProps): JSX.Element {
-    const [posts, setPosts] = useState({posts: []});
+    const [user, setUser] = useState<UserProps>();
+    const [posts, setPosts] = useState<any[]>([]);
     const [reactions, setReactions] = useState<PostReaction>({});
     const [pickerState, setPickerState] = useState<PickerState>({ show: false, postId: "" });
-    const [currentUserReaction, setUserReaction] = useState<UserPostReaction>({});
+    const [currentUserReaction, setCurrentUserReaction] = useState<UserPostReaction>({});
+    const [userReaction, setUserReaction] = useState<ReactionChild[]>([]);
     
     /* 記事そのものとリアクションは別のテーブルに保持しているため，別々に取得する必要がある．*/
-    // 記事の取得
     useEffect(() => {
-        getPosts();
-    }, []);
+        if (props.match.params.hasOwnProperty('username')) {
+            const v: UserProps = props.match.params as UserProps;
+            setUser(v);
+            getPostsByUser();
+            getUserReaction(v);
+        } else {
+            getPosts();
+        }
+    }, [props]);
     
-    // 各記事のリアクションの取得
+    // 全ての記事についてリアクションを取得
     useEffect(() => {
-        posts.posts.forEach((element: any) => {
+        posts.forEach((element: any) => {
             getReaction(element.id);
         });
     }, [posts]);
@@ -52,14 +49,31 @@ export function Main(props: MainProps): JSX.Element {
     // 記事の取得．取得した記事をposts stateにセットする．
     async function getPosts() {
         const result: any = await client.query({
-            query: gql(myquery)
+            query: gql(listPostsSortedByCreatedAt)
         });
-        setPosts({ posts: result.data.listPostsSortedByCreatedAt.items });
+        setPosts([...result.data.listPostsSortedByCreatedAt.items]);
+    }
+    
+    // ユーザーの記事一覧を取得
+    async function getPostsByUser() {
+        if (!user) {
+            console.log("user is not set");
+        } else {
+            var q = listPostsBySpecificOwner.replace('$user', user.username as string);
+            var newPosts: any[] = [];
+            
+            const res: any = await client.query({ query: gql(q) });
+            res.data.listPostsBySpecificOwner.items.forEach((post: any) => {
+                newPosts.push(post);
+            });
+            
+            setPosts(newPosts);
+        }
     }
     
     // 記事IDからリアクションを取得．reactions stateにセットする．
     async function getReaction(postId: string) {
-        var q = myquery2.replace('$postId', postId);
+        var q = listReactionOnSpecificPost.replace('$postId', postId);
         var newUserReactions: UserPostReaction = currentUserReaction;
         newUserReactions[postId] = [];
         
@@ -81,11 +95,32 @@ export function Main(props: MainProps): JSX.Element {
                 newUserReactions[postId].push(reaction.emoji);
             }
         });
-        setUserReaction(newUserReactions);
+        
+        // stateの更新
+        setCurrentUserReaction(newUserReactions);
         setReactions((state) => ({...state, [postId]: tmp}));
     }
     
-    
+    // ユーザープロフィールに表示する絵文字のカウント
+    async function getUserReaction(user: UserProps) {
+        var tmp: Reaction = {};
+        var q = listReactionOnSpecificOwner.replace('$user', user.username as string);
+        const result: any = await client.query({
+            query: gql(q)
+        });
+        result.data.listPostsBySpecificOwner.items.map((post: any) => {
+            post.reactions.items.map((e: any) => {
+                tmp[e.emoji] = tmp.hasOwnProperty(e.emoji) ? tmp[e.emoji] + 1 : 1;
+            });
+        });
+        
+        var sortedArray: ReactionChild[] = [];
+        Object.keys(tmp).map((e: string) => {
+            sortedArray.push({emoji: e, count: tmp[e]});
+        });
+        sortedArray.sort((a, b) => (a.count < b.count) ? 1 : -1);
+        setUserReaction(sortedArray);
+    }    
     
     function showPost(post: any): JSX.Element {
         // 絵文字パレットを表示
@@ -93,7 +128,7 @@ export function Main(props: MainProps): JSX.Element {
             setPickerState({ show: !pickerState.show, postId: post.id });
         }
         
-        // 絵文字を押した時の処理(mutationの送信)
+        // 絵文字パレットから絵文字を押した時の処理(mutationの送信)
         async function onPick(emoji: any) {
             const res = await API.graphql(graphqlOperation(createReaction, { input: {
                 postId: pickerState.postId,
@@ -101,9 +136,9 @@ export function Main(props: MainProps): JSX.Element {
             }}));
             incrementCount(emoji.native);
         }
+        
+        // 直接絵文字を押したときの処理
         async function onPickDirect(e: string) {
-            console.log(e);
-            console.log(post.id);
             const res = await API.graphql(graphqlOperation(createReaction, { input: {
                 postId: post.id,
                 emoji: e,
@@ -125,7 +160,7 @@ export function Main(props: MainProps): JSX.Element {
             
             // state更新
             setReactions(newPostReactions);
-            setUserReaction(newUserReactions);
+            setCurrentUserReaction(newUserReactions);
         }
         
         return (
@@ -185,10 +220,14 @@ export function Main(props: MainProps): JSX.Element {
     return (
         <>
             <Typography variant='h3'>Emojeek</Typography>
+            { user && <h1>{user.username}さんのプロフィール</h1> }
+            { user && <h2>獲得リアクション</h2> }
+            <Box marginX="36px" marginBottom="50px">
+            { userReaction.map(e => <Button variant="outlined">{e.emoji}{e.count}</Button> )}
+            </Box>
+            { user && <h2>投稿記事</h2> }
             <List>
-            {posts.posts.map(post => (
-                showPost(post)
-            ))}
+            { posts.map((post: any) => (showPost(post))) }
             </List>
         </>
     );
@@ -197,6 +236,12 @@ export function Main(props: MainProps): JSX.Element {
 // ある記事についたリアクションを保持
 interface Reaction {
     [emoji: string]: number;
+}
+
+// 全部こっちにしてくれ～～～～～～(なお時間なし)
+interface ReactionChild {
+    emoji: string;
+    count: number;
 }
 
 // 全ての記事についたリアクションを保持
@@ -210,9 +255,12 @@ interface PickerState {
     postId: string;
 }
 
-// これ要る???
-interface MainProps {
+interface MainProps extends RouteComponentProps {
     user: MyUser | undefined;
+}
+
+interface UserProps  {
+    username: string | undefined;
 }
 
 // ユーザーがどの記事にどの絵文字をつけているかを保持

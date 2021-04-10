@@ -1,4 +1,4 @@
-export const myquery = `
+export const listPostsSortedByCreatedAt = `
     query MyQuery {
     listPostsSortedByCreatedAt(type: "post", limit: 20, sortDirection: DESC) {
       items {
@@ -17,13 +17,47 @@ export const myquery = `
     }
 `;
 
-export const myquery2 = `
+export const listReactionOnSpecificPost = `
 query MyQuery {
   listReactionOnSpecificPost(postId: "$postId") {
     items {
       emoji
       id
       owner
+    }
+  }
+}
+`
+
+export const listReactionOnSpecificOwner = `
+query MyQuery {
+  listPostsBySpecificOwner(owner: "$user", sortDirection: DESC, limit: 100) {
+    items {
+      reactions {
+        items {
+          emoji
+        }
+      }
+    }
+  }
+}
+`
+
+export const listPostsBySpecificOwner = `
+query MyQuery {
+  listPostsBySpecificOwner(owner: "$user", sortDirection: DESC, limit: 20) {
+    items {
+      id
+      title
+      owner
+      content
+      createdAt
+      reactions {
+        items {
+          emoji
+          owner
+        }
+      }
     }
   }
 }

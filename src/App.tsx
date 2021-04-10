@@ -50,9 +50,9 @@ function App(): JSX.Element {
             <Button variant='outlined' color="primary" href="/dashboard">マイページ</Button>
             { authState === AuthState.SignedIn && user && <Button variant='outlined' color='primary' href="/" onClick={() => { signOut() }}>ログアウト</Button> }    
             <BrowserRouter>
-                <Route exact path = "/" render={() => <Main user={user}/>} />
+                <Route exact path = "/" render={(props) => <Main user={user} {...props}/>} />
                 <Route exact path = "/user" component = { UserProfile } />
-                <Route exact path = "/user/:username" component = { UserProfile } />
+                <Route exact path = "/user/:username" render={(props) => <Main user={user} {...props}/>} />
                 <Route exact path = "/dashboard" render={() => <Dashboard authState={authState} user={user}/>} />
                 <Route exact path = "/post" render={() => <Post authState={authState} user={user}/>} />
             </BrowserRouter>

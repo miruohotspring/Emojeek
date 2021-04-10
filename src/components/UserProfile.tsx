@@ -1,28 +1,15 @@
-import { RouteComponentProps } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+// graphqlの諸々
 
-export function UserProfile(props: RouteComponentProps<UserProps>): JSX.Element {
-    const [data, setData] = useState<UserProps>({username: props.match.params.username});
-    
-    // on load
-    useEffect(() => {
-        /* do something */
-        setData({username: props.match.params.username});
-    }, []);
-    
-    // on props changes
-    useEffect(() => {
-        /* do something */
-    }, [props]);
-    
+export function UserProfile(user: UserProps): JSX.Element {
     return (
         <>
-            <h1>{ data ? data.username + "さんの投稿記事" : "loading"  }</h1>
+            <h1>{ user ? user.username + "さんのプロフィール" : "loading"  }</h1>
+            <h2>獲得リアクション</h2>
+            <h2>投稿記事</h2>
         </>
     );
 }
 
 export interface UserProps  {
-    username: string;
+    username: string | undefined;
 }
-

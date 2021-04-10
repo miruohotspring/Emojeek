@@ -1,46 +1,59 @@
-# Getting Started with Create React App
+# 10日間で作るマルチリアクション型短文投稿プラットフォーム
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 概要
+いいねやLGTMやサムズアップもいいけれど、リアクションは多ければ多いほど楽しいですよね。
 
-## Available Scripts
+SlackやDiscordで出来るような複数の絵文字を使って反応が出来るSNSみたいなものが作りたかったです。
 
-In the project directory, you can run:
+ユーザーの情報を見たときに、その人がどんな記事を書いているのか？というのを、記事に付与されている文字のタグなどではなく、他人から貰ってるリアクションの総数で視覚的に示せたら楽しそう。つまりコンセプトとしては、
 
-### `npm start`
+- ある投稿に対して、複数の絵文字でリアクションが出来る
+- ユーザーの性質を、貰っているリアクションで表す
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+というものを目指しました。
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 使用フレームワークなど
+- フロントエンド: React(with typescript)
+- バックエンド: GraphQL, AWS Cognito, AWS DynamoDB
+- ホスト: AWS Amplify
 
-### `npm test`
+選んだとしては
+- 個人的なブログサイトをホストするのにAWS Amplifyを使っていて、SPAをホストするのに最も適していると感じる
+- 最近Reactが良いと聞く
+- 最近GraphQLが（略
+- componentとデザインをするにあたって型があった方がいい(TypeScript)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+特に理由はないものの方が多いですね。やったことないのでやってみたいというのが一番かな。ちなみに、
+- React, GraphQL ... 全く触ったことがない
+- JavaScript, TypeScript ... 使用経験3か月未満くらい。正直全部忘れてた。
 
-### `npm run build`
+心の中のミサトさん「サーバレスサーバレスゥ～↑」
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 1日目
+こんな記事を書いていました。
+https://miruohotspring.net/blog/github-actions-lambda/
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+この時はまだ「Lambda書いてAPI Gatewayと接続したりDynamoDB触ったりするんだろうな～～」とか思っていました。
+ちなみに直にlambdaを触ることはないです（）
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 2日目
 
-### `npm run eject`
+これをやりました。
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+[AWS で React アプリケーションを構築する](https://aws.amazon.com/jp/getting-started/hands-on/build-react-app-amplify-graphql/)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+以下当時の日記（原文ママ）
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+あと `amplify add` が何をしているのかというのが分かりにくい。コンソールを確認するとdynamoDBにテーブルが追加されていたりAppSyncにAPIが追加されていたりする。AppSyncって何？？？
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+要するにamplifyは便利だが、各サービス間のやり取りが過度にブラックボックス化してしまって外から何をやっているのか分かりにくいという難点がある（そういうものだが）
 
-## Learn More
+LambdaとAPI Gatewayを使っていた時が一番楽しかったなぁ。もうそういう時代は終わってしまったのか？
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+というかJavaScriptもtypescriptも普通に全然分からなくて泣いている。
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+以上、今日はここまでにしたいけどもう少し調べものして寝ます。
+
+## 3日目
+
+
