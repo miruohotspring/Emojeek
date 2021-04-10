@@ -101,6 +101,15 @@ export function Main(props: MainProps): JSX.Element {
             }}));
             incrementCount(emoji.native);
         }
+        async function onPickDirect(e: string) {
+            console.log(e);
+            console.log(post.id);
+            const res = await API.graphql(graphqlOperation(createReaction, { input: {
+                postId: post.id,
+                emoji: e,
+            }}));
+            incrementCount(e);
+        }
         
         // 絵文字を押したときに記事のリアクション数とユーザーのリアクションを更新
         function incrementCount(e: string) {
@@ -148,13 +157,13 @@ export function Main(props: MainProps): JSX.Element {
             {reactions[post.id] && Object.keys(reactions[post.id]).map((e: any) => {
                 if (currentUserReaction[post.id].includes(e)) {
                     return( 
-                        <Button onClick={() => incrementCount(e)} color="primary" variant="outlined">
+                        <Button onClick={() => onPickDirect(e)} color="primary" variant="outlined">
                         {e}{reactions[post.id][e]}
                         </Button>
                     );
                 } else {
                     return( 
-                        <Button onClick={() => incrementCount(e)} variant="outlined">
+                        <Button onClick={() => onPickDirect(e)} variant="outlined">
                         {e}{reactions[post.id][e]}
                         </Button>
                     );
