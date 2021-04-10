@@ -154,7 +154,7 @@ export function Main(props: MainProps): JSX.Element {
                     );
                 } else {
                     return( 
-                        <Button variant="outlined">
+                        <Button onClick={() => incrementCount(e)} variant="outlined">
                         {e}{reactions[post.id][e]}
                         </Button>
                     );
