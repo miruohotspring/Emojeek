@@ -13,6 +13,7 @@ import './App.css';
 import { Main, Post, UserProfile, Dashboard } from './components';
 import { MyUser } from './Interface';
 
+// サインアウト処理。ログアウトボタンのonClickに使用
 async function signOut() {
     try {
         await Auth.signOut();
@@ -21,17 +22,20 @@ async function signOut() {
     }
 }
 
+// アプリケーション本体
 function App(): JSX.Element {
-    const [authState, setAuthState] = useState<AuthState>();
-    const [user, setUser] = useState<MyUser>();
+    const [authState, setAuthState] = useState<AuthState>(); //認証情報を保持する
+    const [user, setUser] = useState<MyUser>(); // ユーザー名だけを保持する
     
+    // ログイン、ログアウトした際にauthState, userをセット
     useEffect(() => {
-        return onAuthUIStateChange((nextAuthState, authData) => {
+        return onAuthUIStateChange((nextAuthState: AuthState, authData: any) => {
             setAuthState(nextAuthState);
             setUser(authData as MyUser);
         });
     }, []);
     
+    // サインインしている時にauthState, userをセット
     useEffect(() => {
         if (authState === undefined) {
             Auth.currentAuthenticatedUser().then(authData => {

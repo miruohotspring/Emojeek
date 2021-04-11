@@ -19,27 +19,30 @@ import { createPost } from '../graphql/mutations';
 export function Post(props: PostProps) : JSX.Element {
     const initialPostQueryInput = {title: '', content: ''};
     const initialPostQueryInputIsEmpty = {title: true, content: true};
-    const [value, setValue] = useState<PostQueryInput>(initialPostQueryInput);
-    const [isEmpty, setIsEmpty] = useState<PostQueryInputIsEmpty>(initialPostQueryInputIsEmpty);
+    const [value, setValue] = useState<PostQueryInput>(initialPostQueryInput); //投稿内容
+    const [isEmpty, setIsEmpty] = useState<PostQueryInputIsEmpty>(initialPostQueryInputIsEmpty); //文字数のチェック
     
+    // 本文の文字数チェック
     const contentHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue({title: value.title, content: event.target.value});
-        if (event.target.value.length > 0) {
+        if (event.target.value.length > 0 && event.target.value.length < 400) {
             setIsEmpty({title: isEmpty.title, content: false});
         } else {
             setIsEmpty({title: isEmpty.title, content: true});
         }
     }
     
+    // タイトルの文字数チェック
     const titleHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue({title: event.target.value, content: value.content});
-        if (event.target.value.length > 0) {
+        if (event.target.value.length > 0 && event.target.value.length < 40) {
             setIsEmpty({title: false, content: isEmpty.content});
         } else {
             setIsEmpty({title: true, content: isEmpty.content});
         }
     }
     
+    // 初期に作った部分なのでAPI呼び出しの書き方が古い
     const onPost = async() => {
         const res = await API.graphql(graphqlOperation(createPost, { input: {
             type: 'post',
