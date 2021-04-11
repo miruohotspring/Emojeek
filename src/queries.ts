@@ -1,6 +1,6 @@
 export const listPostsSortedByCreatedAt = `
     query MyQuery {
-    listPostsSortedByCreatedAt(type: "post", limit: 20, sortDirection: DESC) {
+    listPostsSortedByCreatedAt(type: "post", limit: 40, sortDirection: DESC) {
       items {
         type
         id
@@ -31,7 +31,7 @@ query MyQuery {
 
 export const listReactionOnSpecificOwner = `
 query MyQuery {
-  listPostsBySpecificOwner(owner: "$user", sortDirection: DESC, limit: 100) {
+  listPostsBySpecificOwner(owner: "$user", sortDirection: DESC, limit: 500) {
     items {
       reactions {
         items {
@@ -45,7 +45,7 @@ query MyQuery {
 
 export const listPostsBySpecificOwner = `
 query MyQuery {
-  listPostsBySpecificOwner(owner: "$user", sortDirection: DESC, limit: 20) {
+  listPostsBySpecificOwner(owner: "$user", sortDirection: DESC, limit: 40) {
     items {
       id
       title
