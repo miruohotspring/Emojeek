@@ -19,7 +19,7 @@ export const listPostsSortedByCreatedAt = `
 
 export const listReactionOnSpecificPost = `
 query MyQuery {
-  listReactionOnSpecificPost(postId: "$postId") {
+  listReactionOnSpecificPost(postId: "$postId", limit: 500) {
     items {
       emoji
       id
@@ -31,7 +31,7 @@ query MyQuery {
 
 export const listReactionOnSpecificOwner = `
 query MyQuery {
-  listPostsBySpecificOwner(owner: "$user", sortDirection: DESC, limit: 500) {
+  listPostsBySpecificOwner(owner: "$user", sortDirection: DESC, limit: 1000) {
     items {
       reactions {
         items {
