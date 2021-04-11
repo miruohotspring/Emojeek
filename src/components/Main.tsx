@@ -20,7 +20,7 @@ import { client } from '../client';
 import gql from 'graphql-tag';
 
 export function Main(props: MainProps): JSX.Element {
-    const [user, setUser] = useState<UserProps>();
+    const [user, setUser] = useState<MyUser>();
     const [posts, setPosts] = useState<any[]>([]);
     const [reactions, setReactions] = useState<PostReaction>({});
     const [pickerState, setPickerState] = useState<PickerState>({ show: false, postId: "" });
@@ -30,10 +30,10 @@ export function Main(props: MainProps): JSX.Element {
     /* 記事そのものとリアクションは別のテーブルに保持しているため，別々に取得する必要がある．*/
     useEffect(() => {
         if (props.match.params.hasOwnProperty('username')) {
-            const v: UserProps = props.match.params as UserProps;
-            setUser(v);
+            const u: MyUser = props.match.params as MyUser;
+            setUser(u);
             getPostsByUser();
-            getUserReaction(v);
+            getUserReaction(u);
         } else {
             getPosts();
         }
@@ -102,7 +102,7 @@ export function Main(props: MainProps): JSX.Element {
     }
     
     // ユーザープロフィールに表示する絵文字のカウント
-    async function getUserReaction(user: UserProps) {
+    async function getUserReaction(user: MyUser) {
         var tmp: Reaction = {};
         var q = listReactionOnSpecificOwner.replace('$user', user.username as string);
         const result: any = await client.query({
@@ -257,10 +257,6 @@ interface PickerState {
 
 interface MainProps extends RouteComponentProps {
     user: MyUser | undefined;
-}
-
-interface UserProps  {
-    username: string | undefined;
 }
 
 // ユーザーがどの記事にどの絵文字をつけているかを保持
