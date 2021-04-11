@@ -17,9 +17,9 @@ SlackやDiscordで出来るような複数の絵文字を使って反応が出�
 # 使用言語、フレームワークなど
 - フロントエンド: React (with TypeScript)
 - バックエンド
- - API: GraphQL
- - 認証: AWSCognito
- - データベース: AWS DynamoDB
+	- API: GraphQL
+	- 認証: AWSCognito
+	- データベース: AWS DynamoDB
 
 ホスティング、及びバックエンドリソースの作成にはAWS Amplifyを使用しました。
 
