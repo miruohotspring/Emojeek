@@ -15,8 +15,8 @@
             {
               "authenticationType": "API_KEY",
               "apiKeyConfig": {
-                "apiKeyExpirationDays": 7,
-                "description": "emojeek"
+                "apiKeyExpirationDays": 365,
+                "description": ""
               }
             }
           ]
