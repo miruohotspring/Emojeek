@@ -13,7 +13,8 @@
     },
     "categories": {
       "auth": {
-        "emojeek77f0a5d8": {}
+        "emojeek77f0a5d8": {},
+        "userPoolGroups": {}
       }
     }
   }

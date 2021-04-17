@@ -173,6 +173,9 @@ export function Main(props: MainProps): JSX.Element {
                 </Typography>
                 </ListItem>
                 <ListItem>
+                    {new Date(post.createdAt).toLocaleString('ja-JP')}
+                </ListItem>
+                <ListItem>
                 <Typography>
                     by: <Button href={"/user/" + post.owner}>{post.owner}</Button>
                 </Typography>

@@ -35,13 +35,15 @@ ReactとGraphQLについては「使ったことないがないのでやって�
 
 TypeScriptは以前Angularを使った時に少しだけ触ったことがあったので、また使ってみたいという気持ちも少しありました。
 
-## ビルド、デプロイ
+## ビルド、デプロイ、動作確認した環境
 
 ### 使用環境
-- OS: WSL(Ubuntu 18.04) on Windows 10
+- OS: Ubuntu 18.04.5 on Windows 10 WSL 1
+- Node: v14.16.0
+- npm: 6.14.11
+- AWS Amplify CLI: 4.46.1
 
 ### アプリケーション
-
 ```sh
 npm run build
 npm start
@@ -74,14 +76,14 @@ AmplifyとReactとTypeScriptとJavaScriptをほぼ同時に勉強しながらの
 - markdownによる記事の作成
 - 記事エディタ
 - 記事単体のページ、記事のシェア
-- 絵文字による記事の検索
+- 絵文字による記事のフィルタリング
 - アカウント情報の編集、削除
 - Twitterアカウントによる認証
 - リアクションの削除
 - リアクションは1人1回まで
 - ユーザーのフォロー
 
-これらの機能は今後追加していこうと思う。
+特に絵文字による記事の検索は、コンセプトに非常に密接に関連しているため実装できなかったのが悔やまれる。これらの機能は今後追加していこうと思う。
 
 ### コンポーネントデザインになっていない
 Reactの魅力の一つにデザインのコンポーネント化があるが、最初こそComponentを分けていたものの、子コンポーネントでフックを使おうとした際にうまくいかず、時間がなかったのもありMainコンポーネントがどんどん肥大化してしまった。
@@ -99,3 +101,12 @@ Reactの魅力の一つにデザインのコンポーネント化があるが、
 
 
 # 参考文献、URL
+https://aws.amazon.com/jp/getting-started/hands-on/build-web-app-s3-lambda-api-gateway-dynamodb/?sc_icampaign=acq_jp_getting-started-handson-202010-build-web-app-s3-lambda-api-gateway-dynamodb&sc_language=jp&sc_icontent=awssm-6336&sc_iplace=ribbon&trk=ha_ribbon_acq_jp_getting-started-handson-202010-build-web-app-s3-lambda-api-gateway-dynamodb
+
+https://aws.amazon.com/jp/getting-started/hands-on/build-react-app-amplify-graphql/
+
+https://zenn.dev/naoki_mochizuki/articles/46928ccb420ee733f78f
+
+https://developer.mozilla.org/ja/docs/Web/JavaScript/A_re-introduction_to_JavaScript
+
+など
