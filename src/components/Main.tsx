@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { MyUser } from '../Interface';
 import { RouteComponentProps } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 
 // emoji, material-ui
 import { Picker } from 'emoji-mart';
@@ -177,8 +178,8 @@ export function Main(props: MainProps): JSX.Element {
                 </Typography>
                 </ListItem>
                 <ListItem>
-                <Typography>
-                    {post.content}
+                <Typography component="span" >
+                    <ReactMarkdown>{post.content}</ReactMarkdown>
                 </Typography>
                 </ListItem>
                 </List>
