@@ -1,16 +1,12 @@
 import React from 'react';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { AmplifyAuthenticator } from '@aws-amplify/ui-react';
 import { AuthState } from '@aws-amplify/ui-components';
 import { MyUser } from '../Interface';
 import { API, graphqlOperation } from 'aws-amplify';
-import SimpleMDE from 'react-simplemde-editor';
-import 'easymde/dist/easymde.min.css';
 
 import { Typography } from '@material-ui/core';
 import {
-  Box,
   Button,
   List,
   ListItem,
@@ -25,10 +21,19 @@ export function Post(props: PostProps) : JSX.Element {
     const initialPostQueryInputIsEmpty = {title: true, content: true};
     const [value, setValue] = useState<PostQueryInput>(initialPostQueryInput); //投稿内容
     const [isEmpty, setIsEmpty] = useState<PostQueryInputIsEmpty>(initialPostQueryInputIsEmpty); //文字数のチェック
-    const history = useHistory();
+    
+    // 本文の文字数チェック
+    const contentHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue({title: value.title, content: event.target.value});
+        if (event.target.value.length > 0 && event.target.value.length < 400) {
+            setIsEmpty({title: isEmpty.title, content: false});
+        } else {
+            setIsEmpty({title: isEmpty.title, content: true});
+        }
+    }
     
     // タイトルの文字数チェック
-    function titleHandleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const titleHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue({title: event.target.value, content: value.content});
         if (event.target.value.length > 0 && event.target.value.length < 40) {
             setIsEmpty({title: false, content: isEmpty.content});
@@ -37,26 +42,16 @@ export function Post(props: PostProps) : JSX.Element {
         }
     }
     
-    // 本文の文字数チェック
-    function contentHandleChange(e: string) {
-        setValue({title: value.title, content: e});
-        if (e.length > 0 && e.length < 400) {
-            setIsEmpty({title: isEmpty.title, content: false});
-        } else {
-            setIsEmpty({title: isEmpty.title, content: true});
-        }
-    }
-    
     // 初期に作った部分なのでAPI呼び出しの書き方が古い
-    async function onPost() {
+    const onPost = async() => {
         const res = await API.graphql(graphqlOperation(createPost, { input: {
             type: 'post',
             title: value.title,
             content: value.content,
         }}));
+        console.log(res);
         setValue(initialPostQueryInput);
         setIsEmpty(initialPostQueryInputIsEmpty);
-        history.push("/");
     }
     
     return props.user && props.authState === AuthState.SignedIn ? (
@@ -78,9 +73,19 @@ export function Post(props: PostProps) : JSX.Element {
                     }/>
                 </ListItem>
                 <ListItem key='post-input-content'>
-                <Box width={1}> 
-                <SimpleMDE onChange={(e: string) => contentHandleChange(e)} />
-                </Box>
+                    <ListItemText primary={
+                    <TextField
+                    id="post-input-content"
+                    label="ここに記事を書く"
+                    multiline
+                    rowsMax="8"
+                    variant="filled"
+                    value={value.content}
+                    onChange={contentHandleChange}
+                    fullWidth
+                    margin="normal"
+                    />
+                    }/>
                 </ListItem>
                 <ListItem>
                     <Button
