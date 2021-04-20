@@ -263,3 +263,4 @@ interface MainProps extends RouteComponentProps {
 interface UserPostReaction {
     [postId: string]: string[];
 }
+
