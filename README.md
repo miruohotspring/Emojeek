@@ -16,6 +16,8 @@
 
 というものを目指しました。
 
+使い方は[こちら](https://github.com/miruohotspring/Emojeek/wiki)
+
 # 使用言語、フレームワークなど
 - フロントエンド: React (with TypeScript)
 - バックエンド
