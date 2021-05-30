@@ -10,7 +10,7 @@ import { theme } from './Design';
 import './App.css';
 
 // components and interfaces
-import { Main, Post, UserProfile, Dashboard, SignUp } from './components';
+import { Main, Post, UserProfile, Dashboard, SignUp, SignIn } from './components';
 import { MyUser } from './Interface';
 
 // サインアウト処理。ログアウトボタンのonClickに使用
@@ -52,7 +52,7 @@ function App(): JSX.Element {
             <Button variant='outlined' color="primary" href="/">トップページ</Button>
             <Button variant='outlined' color="primary" href="/post">投稿</Button>
             { authState === AuthState.SignedIn && user && <Button variant='outlined' color='primary' href="/dashboard">マイページ</Button> }    
-            { authState !== AuthState.SignedIn && <Button variant='outlined' color='primary' href="/dashboard">ログイン</Button> }    
+            { authState !== AuthState.SignedIn && <Button variant='outlined' color='primary' href="/signin">ログイン</Button> }    
             { authState === AuthState.SignedIn && user && <Button variant='outlined' color='primary' href="/" onClick={() => { signOut() }}>ログアウト</Button> }    
             { authState !== AuthState.SignedIn && <Button variant='outlined' color='primary' href="/signup">ユーザー登録</Button> }    
             <BrowserRouter>
@@ -62,6 +62,7 @@ function App(): JSX.Element {
                 <Route exact path = "/dashboard" render={() => <Dashboard authState={authState} user={user}/>} />
                 <Route exact path = "/post" render={() => <Post authState={authState} user={user}/>} />
                 <Route exact path = "/signup" component = { SignUp } />
+                <Route exact path = "/signin" component = { SignIn } />
             </BrowserRouter>
             </ThemeProvider>
             </div>

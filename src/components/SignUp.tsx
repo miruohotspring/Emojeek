@@ -23,7 +23,6 @@ export function SignUp(): JSX.Element {
     const [usernameError, setUsernameError] = useState<SignUpError>(initialError);
     const [passwordError, setPasswordError] = useState<SignUpError>(initialError);
     const [emailError, setEmailError] = useState<SignUpError>(initialError);
-    const [codeError, setCodeError] = useState<SignUpError>(initialError);
     const [defaultError, setDefaultError] = useState<SignUpError>(initialError);
     
     async function signUp() {
@@ -40,6 +39,34 @@ export function SignUp(): JSX.Element {
             console.log(error.message);
             handleError(error);
         }
+    }
+    
+    async function confirmSignUp() {
+        try {
+            await Auth.confirmSignUp(code.username, code.code);
+            const user = await Auth.signIn(info.username, info.password);
+            history.push("/");
+        } catch (error) {
+            handleError(error);
+            console.log('error confirming sign up', error);
+        }
+    }
+    
+    async function resendCode() {
+        try {
+            await Auth.resendSignUp(code.username);
+        } catch (error) {
+            handleError(error);
+            console.log('error resending confirmation code');
+        }
+    }
+    
+    function infoHandleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setInfo({ ...info, [e.target.name]: e.target.value });
+    }
+    
+    function codeHandleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setCode({ ...code, [e.target.name]: e.target.value });
     }
     
     function checkForm() {
@@ -127,35 +154,7 @@ export function SignUp(): JSX.Element {
                     break;
             }
     }
-    
-    async function confirmSignUp() {
-        try {
-            await Auth.confirmSignUp(code.username, code.code);
-            const user = await Auth.signIn(info.username, info.password);
-            history.push("/");
-        } catch (error) {
-            handleError(error);
-            console.log('error confirming sign up', error);
-        }
-    }
-    
-    async function resendCode() {
-        try {
-            await Auth.resendSignUp(code.username);
-        } catch (error) {
-            handleError(error);
-            console.log('error resending confirmation code');
-        }
-    }
 
-    function infoHandleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        setInfo({ ...info, [e.target.name]: e.target.value });
-    }
-    
-    function codeHandleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        setCode({ ...code, [e.target.name]: e.target.value });
-    }
-    
     return(
         <>
         { !code.isSet && <>
@@ -240,7 +239,7 @@ export function SignUp(): JSX.Element {
             /> }/>
         </ListItem>
         <ListItem>
-        <ListItemText primary={defaultError.message} />
+        <ListItemText primary={defaultError.message}/>
         </ListItem>
         <ListItem>
             <Button
