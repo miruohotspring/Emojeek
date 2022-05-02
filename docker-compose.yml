@@ -7,5 +7,4 @@ services:
             - "20002:20002"
         volumes:
             - .:/var/www/app
-            - ~/.aws/:/root/.aws/
         tty: true

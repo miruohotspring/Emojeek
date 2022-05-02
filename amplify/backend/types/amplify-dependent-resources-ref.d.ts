@@ -1,10 +1,4 @@
 export type AmplifyDependentResourcesAttributes = {
-    "api": {
-        "emojeek": {
-            "GraphQLAPIIdOutput": "string",
-            "GraphQLAPIEndpointOutput": "string"
-        }
-    },
     "auth": {
         "emojeek77f0a5d8": {
             "IdentityPoolId": "string",
