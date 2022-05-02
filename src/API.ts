@@ -63,28 +63,28 @@ export type ModelSizeInput = {
 
 export type Post = {
   __typename: "Post",
-  type?: string,
+  type: string,
   id?: string | null,
-  title?: string,
-  content?: string,
+  title: string,
+  content: string,
   owner?: string | null,
   createdAt?: string | null,
-  updatedAt?: string,
-  reactions?: ModelReactionConnection,
+  updatedAt: string,
+  reactions?: ModelReactionConnection | null,
 };
 
 export type ModelReactionConnection = {
   __typename: "ModelReactionConnection",
-  items?:  Array<Reaction | null > | null,
+  items:  Array<Reaction | null >,
   nextToken?: string | null,
 };
 
 export type Reaction = {
   __typename: "Reaction",
   id?: string | null,
-  postId?: string,
-  emoji?: string,
-  post?: Post,
+  postId: string,
+  emoji: string,
+  post?: Post | null,
   owner?: string | null,
 };
 
@@ -98,7 +98,7 @@ export type UpdatePostInput = {
 };
 
 export type DeletePostInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateReactionInput = {
@@ -132,7 +132,7 @@ export type ModelIDInput = {
 };
 
 export type DeleteReactionInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type ModelPostFilterInput = {
@@ -149,7 +149,7 @@ export type ModelPostFilterInput = {
 
 export type ModelPostConnection = {
   __typename: "ModelPostConnection",
-  items?:  Array<Post | null > | null,
+  items:  Array<Post | null >,
   nextToken?: string | null,
 };
 
@@ -179,7 +179,7 @@ export type ModelReactionFilterInput = {
 };
 
 export type CreatePostMutationVariables = {
-  input?: CreatePostInput,
+  input: CreatePostInput,
   condition?: ModelPostConditionInput | null,
 };
 
@@ -195,20 +195,20 @@ export type CreatePostMutation = {
     updatedAt: string,
     reactions?:  {
       __typename: "ModelReactionConnection",
-      items?:  Array< {
+      items:  Array< {
         __typename: "Reaction",
         id?: string | null,
         postId: string,
         emoji: string,
         owner?: string | null,
-      } | null > | null,
+      } | null >,
       nextToken?: string | null,
     } | null,
   } | null,
 };
 
 export type UpdatePostMutationVariables = {
-  input?: UpdatePostInput,
+  input: UpdatePostInput,
   condition?: ModelPostConditionInput | null,
 };
 
@@ -224,20 +224,20 @@ export type UpdatePostMutation = {
     updatedAt: string,
     reactions?:  {
       __typename: "ModelReactionConnection",
-      items?:  Array< {
+      items:  Array< {
         __typename: "Reaction",
         id?: string | null,
         postId: string,
         emoji: string,
         owner?: string | null,
-      } | null > | null,
+      } | null >,
       nextToken?: string | null,
     } | null,
   } | null,
 };
 
 export type DeletePostMutationVariables = {
-  input?: DeletePostInput,
+  input: DeletePostInput,
   condition?: ModelPostConditionInput | null,
 };
 
@@ -253,20 +253,20 @@ export type DeletePostMutation = {
     updatedAt: string,
     reactions?:  {
       __typename: "ModelReactionConnection",
-      items?:  Array< {
+      items:  Array< {
         __typename: "Reaction",
         id?: string | null,
         postId: string,
         emoji: string,
         owner?: string | null,
-      } | null > | null,
+      } | null >,
       nextToken?: string | null,
     } | null,
   } | null,
 };
 
 export type CreateReactionMutationVariables = {
-  input?: CreateReactionInput,
+  input: CreateReactionInput,
   condition?: ModelReactionConditionInput | null,
 };
 
@@ -295,7 +295,7 @@ export type CreateReactionMutation = {
 };
 
 export type DeleteReactionMutationVariables = {
-  input?: DeleteReactionInput,
+  input: DeleteReactionInput,
   condition?: ModelReactionConditionInput | null,
 };
 
@@ -323,35 +323,8 @@ export type DeleteReactionMutation = {
   } | null,
 };
 
-export type ListPostsQueryVariables = {
-  filter?: ModelPostFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListPostsQuery = {
-  listPosts?:  {
-    __typename: "ModelPostConnection",
-    items?:  Array< {
-      __typename: "Post",
-      type: string,
-      id?: string | null,
-      title: string,
-      content: string,
-      owner?: string | null,
-      createdAt?: string | null,
-      updatedAt: string,
-      reactions?:  {
-        __typename: "ModelReactionConnection",
-        nextToken?: string | null,
-      } | null,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type GetPostQueryVariables = {
-  id?: string,
+  id: string,
 };
 
 export type GetPostQuery = {
@@ -366,15 +339,42 @@ export type GetPostQuery = {
     updatedAt: string,
     reactions?:  {
       __typename: "ModelReactionConnection",
-      items?:  Array< {
+      items:  Array< {
         __typename: "Reaction",
         id?: string | null,
         postId: string,
         emoji: string,
         owner?: string | null,
-      } | null > | null,
+      } | null >,
       nextToken?: string | null,
     } | null,
+  } | null,
+};
+
+export type ListPostsQueryVariables = {
+  filter?: ModelPostFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListPostsQuery = {
+  listPosts?:  {
+    __typename: "ModelPostConnection",
+    items:  Array< {
+      __typename: "Post",
+      type: string,
+      id?: string | null,
+      title: string,
+      content: string,
+      owner?: string | null,
+      createdAt?: string | null,
+      updatedAt: string,
+      reactions?:  {
+        __typename: "ModelReactionConnection",
+        nextToken?: string | null,
+      } | null,
+    } | null >,
+    nextToken?: string | null,
   } | null,
 };
 
@@ -390,7 +390,7 @@ export type ListPostsSortedByCreatedAtQueryVariables = {
 export type ListPostsSortedByCreatedAtQuery = {
   listPostsSortedByCreatedAt?:  {
     __typename: "ModelPostConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Post",
       type: string,
       id?: string | null,
@@ -403,7 +403,7 @@ export type ListPostsSortedByCreatedAtQuery = {
         __typename: "ModelReactionConnection",
         nextToken?: string | null,
       } | null,
-    } | null > | null,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -420,7 +420,7 @@ export type ListPostsBySpecificOwnerQueryVariables = {
 export type ListPostsBySpecificOwnerQuery = {
   listPostsBySpecificOwner?:  {
     __typename: "ModelPostConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Post",
       type: string,
       id?: string | null,
@@ -433,13 +433,13 @@ export type ListPostsBySpecificOwnerQuery = {
         __typename: "ModelReactionConnection",
         nextToken?: string | null,
       } | null,
-    } | null > | null,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
 
 export type GetReactionQueryVariables = {
-  id?: string,
+  id: string,
 };
 
 export type GetReactionQuery = {
@@ -475,7 +475,7 @@ export type ListReactionsQueryVariables = {
 export type ListReactionsQuery = {
   listReactions?:  {
     __typename: "ModelReactionConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Reaction",
       id?: string | null,
       postId: string,
@@ -491,7 +491,7 @@ export type ListReactionsQuery = {
         updatedAt: string,
       } | null,
       owner?: string | null,
-    } | null > | null,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -508,7 +508,7 @@ export type ListReactionOnSpecificPostQueryVariables = {
 export type ListReactionOnSpecificPostQuery = {
   listReactionOnSpecificPost?:  {
     __typename: "ModelReactionConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Reaction",
       id?: string | null,
       postId: string,
@@ -524,7 +524,7 @@ export type ListReactionOnSpecificPostQuery = {
         updatedAt: string,
       } | null,
       owner?: string | null,
-    } | null > | null,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -541,13 +541,13 @@ export type OnCreatePostSubscription = {
     updatedAt: string,
     reactions?:  {
       __typename: "ModelReactionConnection",
-      items?:  Array< {
+      items:  Array< {
         __typename: "Reaction",
         id?: string | null,
         postId: string,
         emoji: string,
         owner?: string | null,
-      } | null > | null,
+      } | null >,
       nextToken?: string | null,
     } | null,
   } | null,
@@ -565,13 +565,13 @@ export type OnUpdatePostSubscription = {
     updatedAt: string,
     reactions?:  {
       __typename: "ModelReactionConnection",
-      items?:  Array< {
+      items:  Array< {
         __typename: "Reaction",
         id?: string | null,
         postId: string,
         emoji: string,
         owner?: string | null,
-      } | null > | null,
+      } | null >,
       nextToken?: string | null,
     } | null,
   } | null,
@@ -589,13 +589,13 @@ export type OnDeletePostSubscription = {
     updatedAt: string,
     reactions?:  {
       __typename: "ModelReactionConnection",
-      items?:  Array< {
+      items:  Array< {
         __typename: "Reaction",
         id?: string | null,
         postId: string,
         emoji: string,
         owner?: string | null,
-      } | null > | null,
+      } | null >,
       nextToken?: string | null,
     } | null,
   } | null,

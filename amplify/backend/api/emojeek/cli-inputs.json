@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "serviceName": "AppSync",
+    "defaultAuthType": {
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authemojeek77f0a5d8"
+    },
+    "additionalAuthTypes": [
+      {
+        "mode": "API_KEY",
+        "expirationTime": 365,
+        "keyDescription": ""
+      }
+    ],
+    "conflictResolution": {},
+    "apiName": "emojeek",
+    "gqlSchemaPath": "/var/www/app/amplify/backend/api/emojeek/schema.graphql"
+  }
+}

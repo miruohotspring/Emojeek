@@ -1,0 +1,11 @@
+services:
+    amplify:
+        build: ./
+        container_name: amplify
+        ports: 
+            - "3000:3000"
+            - "20002:20002"
+        volumes:
+            - .:/var/www/app
+            - ~/.aws/:/root/.aws/
+        tty: true

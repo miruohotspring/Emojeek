@@ -2,6 +2,28 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getPost = /* GraphQL */ `
+  query GetPost($id: ID!) {
+    getPost(id: $id) {
+      type
+      id
+      title
+      content
+      owner
+      createdAt
+      updatedAt
+      reactions {
+        items {
+          id
+          postId
+          emoji
+          owner
+        }
+        nextToken
+      }
+    }
+  }
+`;
 export const listPosts = /* GraphQL */ `
   query ListPosts(
     $filter: ModelPostFilterInput
@@ -22,28 +44,6 @@ export const listPosts = /* GraphQL */ `
         }
       }
       nextToken
-    }
-  }
-`;
-export const getPost = /* GraphQL */ `
-  query GetPost($id: ID!) {
-    getPost(id: $id) {
-      type
-      id
-      title
-      content
-      owner
-      createdAt
-      updatedAt
-      reactions {
-        items {
-          id
-          postId
-          emoji
-          owner
-        }
-        nextToken
-      }
     }
   }
 `;
