@@ -36,7 +36,7 @@ export function Main(props: MainProps): JSX.Element {
         if (props.match.params.hasOwnProperty('username')) {
             const u: MyUser = props.match.params as MyUser;
             setUser(u);
-            getPostsByUser();
+            getPostsByUser(u);
             getUserReaction(u);
         } else {
             getPosts(); //Routerからユーザーがセットされていない=トップページの時は最新記事を取得
@@ -59,21 +59,17 @@ export function Main(props: MainProps): JSX.Element {
     }
     
     // ユーザーの記事一覧を取得
-    async function getPostsByUser() {
+    async function getPostsByUser(u: MyUser) {
         // ユーザーがセットされていなければ何もしない
-        if (!user) {
-            console.log("user is not set");
-        } else {
-            var q = listPostsBySpecificOwner.replace('$user', user.username as string);
-            var newPosts: any[] = [];
-            
-            const res: any = await client.query({ query: gql(q) });
-            res.data.listPostsBySpecificOwner.items.forEach((post: any) => {
-                newPosts.push(post);
-            });
-            
-            setPosts(newPosts); //記事をセット
-        }
+        var q = listPostsBySpecificOwner.replace('$user', u.username as string);
+        var newPosts: any[] = [];
+        
+        const res: any = await client.query({ query: gql(q) });
+        res.data.listPostsBySpecificOwner.items.forEach((post: any) => {
+            newPosts.push(post);
+        });
+        
+        setPosts(newPosts); //記事をセット
     }
     
     // 記事IDからリアクションを取得．reactions stateにセットする．
