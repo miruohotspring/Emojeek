@@ -1,0 +1,21 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-emojeek-dev-52455-authRole",
+      "UnauthRoleArn": "arn:aws:iam::004908959120:role/amplify-emojeek-dev-52455-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::004908959120:role/amplify-emojeek-dev-52455-authRole",
+      "Region": "ap-northeast-1",
+      "DeploymentBucketName": "amplify-emojeek-dev-52455-deployment",
+      "UnauthRoleName": "amplify-emojeek-dev-52455-unauthRole",
+      "StackName": "amplify-emojeek-dev-52455",
+      "StackId": "arn:aws:cloudformation:ap-northeast-1:004908959120:stack/amplify-emojeek-dev-52455/53ba1110-9328-11eb-9e10-0a2f97775449",
+      "AmplifyAppId": "d3uebk0xgssymz"
+    },
+    "categories": {
+      "auth": {
+        "emojeek77f0a5d8": {},
+        "userPoolGroups": {}
+      }
+    }
+  }
+}
