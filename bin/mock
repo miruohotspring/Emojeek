@@ -1,0 +1,2 @@
+#!/bin/sh -e
+docker exec -it amplify sh -c "amplify mock"

@@ -1,0 +1,30 @@
+#!/bin/sh -e
+
+##############################
+# SET YOUR CREDENTIALS FIRST #
+##############################
+ACCESSKEYID=""
+SECRETACCESSKEY=""
+
+docker-compose up -d --build
+docker exec -it amplify expect -c "
+set timeout 30
+spawn amplify init
+expect \"Do you want\"
+send \"\n\"
+expect \"Choose the environment\"
+send \"\n\"
+expect \"Choose your default\"
+send \"\n\"
+expect \"Select the authentication\"
+send \"j\n\"
+expect \"accessKeyId:\"
+send \"${ACCESSKEYID}\n\"
+expect \"secretAccessKey:\"
+send \"${SECRETACCESSKEY}\n\"
+expect \"region:\"
+send \"jjjjjjjjj\n\"
+expect \"$\"
+exit 0
+"
+docker exec -it amplify sh -c "npm install"
