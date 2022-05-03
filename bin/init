@@ -1,13 +1,15 @@
 #!/bin/sh -e
 
-##############################
-# SET YOUR CREDENTIALS FIRST #
-##############################
-ACCESSKEYID=""
-SECRETACCESSKEY=""
+# SET YOUR CREDENTIALS FIRST
+
+# ../.secret-key ##############
+#  ACCESSKEYID="<id>"         #
+#  SECRETACCESSKEY="<secret>" #
+###############################
 
 docker-compose up -d --build
-docker exec -it amplify expect -c "
+source .secret-key
+docker exec -e ACCESSKEYID=$ACCESSKEYID -e SECRETACCESSKEY=$SECRETACCESSKEY -it amplify expect -c "
 set timeout 30
 spawn amplify init
 expect \"Do you want\"
