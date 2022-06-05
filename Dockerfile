@@ -2,7 +2,7 @@ FROM node:12.4
 
 # Amplify CLIのインストール
 RUN apt update; apt install -y sudo expect
-RUN sudo npm i -g @aws-amplify/cli@8.0.2 --unsafe-perm=true
+RUN sudo npm i -g @aws-amplify/cli@7.6.19 --unsafe-perm=true
 
 # JDKのインストール
 RUN apt install -y wget software-properties-common apt-transport-https

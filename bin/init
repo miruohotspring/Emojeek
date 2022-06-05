@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 # SET YOUR CREDENTIALS FIRST
 
@@ -7,7 +7,7 @@
 #  SECRETACCESSKEY="<secret>" #
 ###############################
 
-docker-compose up -d --build
+docker-compose up -d
 source .secret-key
 docker exec -e ACCESSKEYID=$ACCESSKEYID -e SECRETACCESSKEY=$SECRETACCESSKEY -it amplify expect -c "
 set timeout 30
