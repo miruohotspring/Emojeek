@@ -25,6 +25,10 @@
 
 ホスティング、及びバックエンドリソースの作成にはAWS Amplifyを使用しました。
 
+## 構成図
+
+<img width="840" alt="スクリーンショット 2022-07-13 12 36 54" src="https://user-images.githubusercontent.com/27941972/178645328-2a5feaf0-d743-4cdd-a3cb-edccab94f6da.png">
+
 これらを選んだ理由としては
 - 最近Reactが良いと聞く
 - 最近GraphQLが（略
@@ -39,18 +43,18 @@ TypeScriptは以前Angularを使った時に少しだけ触ったことがあっ
 
 ### 使用環境
 - OS: Ubuntu 18.04.5 on Windows 10 WSL 1
-- Node: v14.16.0
-- npm: 6.14.11
-- AWS Amplify CLI: 4.46.1
+
+### 初回起動時
+```sh
+bin/init
+```
 
 ### アプリケーション
 ```sh
-npm install
-npm start
+bin/run
 ```
 
 ### バックエンドリソース
 ```sh
-amplify init
-amplify mock
+bin/mock
 ```
